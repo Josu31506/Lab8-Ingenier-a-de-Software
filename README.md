@@ -137,19 +137,17 @@ La arquitectura permite cumplir los atributos solicitados en el laboratorio:
 
 El siguiente diagrama representa el flujo funcional del sistema de recompensas.
 
-![Diagrama de casos de uso](imgs/casos-uso.png)
+![Diagrama de casos de uso](imgs/diagrama_caso_uso2.png)
 
 ### Explicación del diagrama de casos de uso
 
-El flujo inicia cuando el **Restaurante afiliado** registra una cena realizada por un cliente. El sistema valida la información de la cena y publica el evento correspondiente para que pueda ser procesado de forma asíncrona.
+El flujo inicia cuando el **Restaurante afiliado** registra la información de una cena realizada por un cliente. Esta acción incluye la validación de los datos de la cena y la publicación del evento correspondiente en RabbitMQ.
 
-Luego, el sistema procesa el consumo registrado. Para ello, calcula los puntos y el cashback correspondientes al monto consumido. Antes de actualizar la cuenta del cliente, verifica si la cuenta de recompensas ya existe. Si la cuenta no existe, se ejecuta el caso extendido **Crear cuenta si no existe**.
+Luego, el **RabbitMQ Broker** administra la entrega del mensaje hacia el módulo de recompensas. El sistema procesa el consumo, calcula automáticamente los puntos y cashback asociados al cliente, y verifica si la cuenta de recompensas existe. Si la cuenta no existe, se ejecuta el caso extendido **Crear cuenta si no existe**.
 
-Después de verificar o crear la cuenta, el sistema actualiza la cuenta del cliente con los puntos y cashback generados. Una vez actualizada la cuenta, se publica la recompensa procesada.
+Después de verificar o crear la cuenta, el sistema actualiza la cuenta de recompensas del cliente con los beneficios calculados. Una vez actualizada la cuenta, se publica el evento de recompensa procesada.
 
-El actor **RabbitMQ Broker** representa el mecanismo de mensajería que permite desacoplar el registro de cenas, el procesamiento de recompensas y la notificación. Gracias a RabbitMQ, cada parte del sistema puede ejecutarse de forma independiente.
-
-Finalmente, el sistema notifica al **Cliente** sobre la recompensa procesada. En la implementación actual, esta notificación se simula por consola, pero la arquitectura permite reemplazar ese mecanismo por correo, SMS u otro canal sin afectar la lógica principal.
+Finalmente, el sistema ejecuta el caso de uso **Notificar al cliente**, que representa el envío de una notificación indicando que la recompensa fue procesada exitosamente. En la implementación actual, esta notificación se simula mediante un mensaje en consola; sin embargo, la arquitectura permite reemplazar esta simulación por un servicio real de correo electrónico, SMS o aplicación móvil sin modificar el flujo principal del sistema.principal.
 
 ---
 
@@ -227,28 +225,11 @@ notification.service.js
 
 ---
 
-## 8. Reglas de Negocio
 
-El cálculo de recompensas se realiza con las siguientes reglas:
-
-```txt
-points = Math.floor(amount)
-cashback = amount * 0.05
-```
-
-El cashback se redondea a dos decimales.
-
-Ejemplo:
-
-```txt
-amount = 150.5
-points = 150
-cashback = 7.53
-```
 
 ---
 
-## 9. Patrones Aplicados
+## 8. Patrones Aplicados
 
 ### Event-Driven Architecture
 
@@ -297,7 +278,7 @@ Los mensajes enviados a RabbitMQ siguen una estructura común:
 
 ---
 
-## 10. Justificación de RabbitMQ
+## 9. Justificación de RabbitMQ
 
 Se eligió **RabbitMQ** como broker de mensajería porque el problema corresponde a un flujo transaccional basado en colas, donde un productor registra un evento y uno o más consumidores lo procesan.
 
@@ -314,7 +295,7 @@ Kafka sería más apropiado para escenarios de streaming masivo, retención hist
 
 ---
 
-## 11. Endpoint Principal
+## 10. Endpoint Principal
 
 ### Registrar Cena
 
@@ -353,7 +334,7 @@ Respuesta esperada:
 
 ---
 
-## 12. Instalación
+## 11. Instalación
 
 ```bash
 npm install
@@ -361,7 +342,7 @@ npm install
 
 ---
 
-## 13. Configuración
+## 12. Configuración
 
 Crear un archivo `.env` basado en `.env.example`.
 
@@ -393,7 +374,7 @@ coverage/
 
 ---
 
-## 14. Ejecución del Backend
+## 13. Ejecución del Backend
 
 Modo desarrollo:
 
@@ -407,7 +388,7 @@ Modo producción/local:
 npm start
 ```
 
-## 15. Pruebas Automatizadas
+## 14. Pruebas Automatizadas
 
 Las pruebas fueron implementadas con **Jest**.
 
@@ -445,7 +426,7 @@ Tests: 31 passed, 31 total
 
 ---
 
-## 16. Análisis SonarQube
+## 15. Análisis SonarQube
 
 El proyecto fue analizado con SonarQube para evaluar calidad, cobertura, duplicación, mantenibilidad, confiabilidad y seguridad.
 
@@ -471,7 +452,7 @@ New Issues: 0
 
 ---
 
-## 17. Configuración de SonarQube
+## 16. Configuración de SonarQube
 
 El archivo `sonar-project.properties` contiene la configuración necesaria para indicar la ubicación del código fuente, pruebas y reporte de cobertura generado por Jest.
 
@@ -505,7 +486,7 @@ El token no debe guardarse en el repositorio ni en el archivo `sonar-project.pro
 
 ---
 
-## 18. Evidencias
+## 17. Evidencias
 
 Colocar aquí las capturas utilizadas como evidencia del proyecto.
 
@@ -519,7 +500,7 @@ Colocar aquí las capturas utilizadas como evidencia del proyecto.
 
 ---
 
-## 19. Estado Final del Proyecto
+## 18. Estado Final del Proyecto
 
 El proyecto cumple con los atributos solicitados:
 
