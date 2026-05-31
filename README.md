@@ -1,9 +1,10 @@
-# Laboratorio 8 - Rewards System
+# Laboratorio 8
 
 Backend en Node.js para simular un programa de recompensas de restaurantes afiliados usando una arquitectura modular orientada a eventos con RabbitMQ.
 
-El sistema permite registrar cenas realizadas por clientes, publicar eventos de transacción, procesar recompensas, acumular puntos y cashback, y emitir notificaciones simuladas por consola.
+El sistema permite registrar cenas realizadas por clientes, publicar eventos de transacción, procesar recompensas, acumular puntos y cashback, actualizar la cuenta de recompensas del cliente y generar una notificación cuando la recompensa fue procesada exitosamente.
 
+En la implementación actual, la notificación se simula mediante un mensaje en consola; sin embargo, la arquitectura permite reemplazar este comportamiento por un servicio real de correo electrónico, SMS o aplicación móvil sin modificar el flujo principal del sistema.
 ---
 
 ## Repositorio y Análisis de Calidad
