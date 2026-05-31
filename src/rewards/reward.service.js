@@ -18,11 +18,12 @@ class RewardService {
   }
 
   async processDinnerRegisteredEvent(event) {
-    if (!event || !event.payload) {
+    if (!event?.payload) {
       throw new Error('DINNER_REGISTERED event must include payload');
     }
 
     const { amount, cardNumber } = event.payload;
+
     const reward = new Reward({
       cardNumber,
       pointsEarned: this.calculatePoints(amount),
